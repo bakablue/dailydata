@@ -2,21 +2,33 @@
 
 import sqlite3
 
-# titre
+# id
+# title
 # description
-# duree
-# nombre de vue
-# url de la thumbnail de la video
+# duration
+# views
+# thumbnail url
 
-def make_query(query):
-    pass
+def print_data(row_data):
+    m, s = divmod(row_data[3], 60)
+    h, m = divmod(m, 60)
+    duration = "%02d:%02d:%02d" % (h, m, s)
+    print("Informations of the video:\n"
+          " * id: %s\n"
+          " * title: %s\n"
+          " * description: %s"
+          % row_data[:3])
+    print(" * duration: %s" % duration)
+    print(" * views: %d\n"
+          " * thumbnail url: %s"
+          % row_data[4:])
 
 def create_db():
     query = '''CREATE TABLE videos_data\
                (id text primary key, title text, description text,\
-               duration real, views real, thumbnail_url text)'''
+               duration integer, views integer, thumbnail_url text)'''
 
-    conn = sqlite3.connect('test.db')
+    conn = sqlite3.connect('videos_data.db')
     c = conn.cursor()
     c.execute(query)
 
@@ -25,7 +37,7 @@ def create_db():
     conn.close()
 
 def insert_data(video_data):
-    conn = sqlite3.connect('test.db')
+    conn = sqlite3.connect('videos_data.db')
     c = conn.cursor()
     c.execute('INSERT INTO videos_data VALUES (?,?,?,?,?,?)', video_data)
 
@@ -33,15 +45,15 @@ def insert_data(video_data):
 
     conn.close()
 
-def is_video_present(idVideo):
-    conn = sqlite3.connect('test.db')
+def get_video_infos(idVideo):
+    conn = sqlite3.connect('videos_data.db')
     c = conn.cursor()
     
     tupleData = (idVideo,)
 
     c.execute('SELECT * FROM videos_data WHERE id=?', tupleData)
 
-    result = True if c.fetchone() is not None else False
+    result = c.fetchone()
 
     c.close()
 
