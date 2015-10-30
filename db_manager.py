@@ -12,9 +12,9 @@ def make_query(query):
     pass
 
 def create_db():
-    print('test')
     query = '''CREATE TABLE videos_data\
-               (id primary key, title text, description text, time real)'''
+               (id text primary key, title text, description text,\
+               duration real, views real, thumbnail_url text)'''
 
     conn = sqlite3.connect('test.db')
     c = conn.cursor()
@@ -27,7 +27,7 @@ def create_db():
 def insert_data(video_data):
     conn = sqlite3.connect('test.db')
     c = conn.cursor()
-    c.execute('INSERT INTO videos_data VALUES (?)', video_data)
+    c.execute('INSERT INTO videos_data VALUES (?,?,?,?,?,?)', video_data)
 
     conn.commit()
 
@@ -41,6 +41,8 @@ def is_video_present(idVideo):
 
     c.execute('SELECT * FROM videos_data WHERE id=?', tupleData)
 
-    print (c.fetchone())
+    result = True if c.fetchone() is not None else False
 
     c.close()
+
+    return result
