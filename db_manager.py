@@ -10,6 +10,9 @@ import sqlite3
 # thumbnail url
 
 def print_data(row_data):
+    """
+        Print the informations of the video stored in `row_data`.
+    """
     m, s = divmod(row_data[3], 60)
     h, m = divmod(m, 60)
     duration = "%02d:%02d:%02d" % (h, m, s)
@@ -24,6 +27,9 @@ def print_data(row_data):
           % row_data[4:])
 
 def create_db():
+    """
+        Create the database with the videos_data table.
+    """
     query = '''CREATE TABLE videos_data\
                (id text primary key, title text, description text,\
                duration integer, views integer, thumbnail_url text)'''
@@ -37,6 +43,9 @@ def create_db():
     conn.close()
 
 def insert_data(video_data):
+    """
+        Insert `video_data` row in the database.
+    """
     conn = sqlite3.connect('videos_data.db')
     c = conn.cursor()
     c.execute('INSERT INTO videos_data VALUES (?,?,?,?,?,?)', video_data)
@@ -46,6 +55,9 @@ def insert_data(video_data):
     conn.close()
 
 def get_video_infos(idVideo):
+    """
+        Retrieve the information of the video corresponding to `idVideo`.
+    """
     conn = sqlite3.connect('videos_data.db')
     c = conn.cursor()
     
